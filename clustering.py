@@ -4,11 +4,15 @@ import nltk
 import string
 import re
 import os
+import sys
 import codecs
 from sklearn import feature_extraction
 from sklearn.feature_extraction.text import TfidfVectorizer
+import time
+tStart = time.time()
 
-
+result_filename = sys.argv[1]
+cluster_num = int(sys.argv[2])
 
 stemmer = nltk.stem.porter.PorterStemmer()
 remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
@@ -26,7 +30,11 @@ def cosine_sim(text1, text2):
     tfidf = vectorizer.fit_transform([text1, text2])
     return ((tfidf * tfidf.T).A)[0,1]
 
-a = 'We demonstrate the equivalence of Virasoro constraints imposed on continuumlimit of partition function of Hermitean 1 matrix model and the Ward identitiesof Kontsevich s model Since the first model describes ordinary d 2 quantumgravity while the second one is supposed to coincide with Witten s topologicalgravity the result provides a strong implication that the two models areindeed the same'
+f = open("abstract.txt", "r")
+a = f.read()
+#a = sys.argv[1]
+#print a
+f.close()
 
 
 
@@ -35,7 +43,7 @@ a = 'We demonstrate the equivalence of Virasoro constraints imposed on continuum
 authors = []
 contents = []
 
-with open("result_min", "r") as lines:
+with open(result_filename, "r") as lines:
     for line in lines:
         authors.append(line.split(',')[0])
         contents.append(line.split(',')[1])
@@ -104,7 +112,7 @@ dist = 1 - cosine_similarity(tfidf_matrix)
 
 from sklearn.cluster import KMeans
 
-num_clusters = 5
+num_clusters = cluster_num
 
 km = KMeans(n_clusters=num_clusters)
 
@@ -153,8 +161,13 @@ for i in range(num_clusters):
     #print(frame.ix[i]['authors'])
     
 #print max_cluster
-for max_author in max_authors:
-    for i in max_author.replace('Authors:', '').split('and'):
+for max_author in max_authors[:100]:
+    for i in max_author.replace('Authors:', '').split('and')[:100]:
+        if len(i)==0 or i[0]!=" ":
+            continue
         print i
+
+tEnd = time.time()
+print "It cost %f sec" % (tEnd - tStart)
 
 #print('----------')
