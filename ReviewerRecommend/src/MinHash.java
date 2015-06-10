@@ -5,12 +5,11 @@ public class MinHash {
 
 	HashFunction[] myHashes;
 	
-	public MinHash()
+	public MinHash(int hashFuncCount)
 	{
-		myHashes = new HashFunction[3];
-		myHashes[0] = new HashFunction(1);
-		myHashes[1] = new HashFunction(2);
-		myHashes[2] = new HashFunction(3);
+		myHashes = new HashFunction[hashFuncCount];
+		for(int i=0;i<hashFuncCount;i++)
+			myHashes[i] = new HashFunction(i);
 	}
 	
 	public int[] FindMinHash(String[] vector)

@@ -8,8 +8,9 @@ import org.unigram.likelike.lsh.*;
 
 public class Program {
     private static String VectorFile = "vectors.txt";
-    private static String MinHashFile = "minHash.txt";
-	
+    private static String MinHashFile = "minHash_1000.txt";
+	private static int NumofHashFunctions = 1000;
+    
 	static HashMap<String,HashSet<String>> citationRelatoin;
 	static TreeSet<String> docIDS;
 	static void ReadCitation()
@@ -77,8 +78,8 @@ public class Program {
 	}
 	
 	static void GenMinHashTable()
-	{
-		MinHash hash = new MinHash();
+	{	
+		MinHash hash = new MinHash(NumofHashFunctions);
 		
 		try {
 			FileOutputStream out = new FileOutputStream(MinHashFile);
@@ -121,13 +122,14 @@ public class Program {
 	public static void main(String[] args) {
 		//ReadCitation();
 		//GenCitationVectors();
-		GenMinHashTable();
+		//GenMinHashTable();
 		try {	
 			ToolRunner.run(new LSHRecommendations(), args);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//System.out.println("End.");
 	}
 
 }
